@@ -3,19 +3,19 @@ package com.deepankur.example.weatherhistory;
 public class WeatherPresenter implements WeatherInteractor.OnWeatherApiCallFinishedListener {
 
     private WeatherView weatherView;
-    private WeatherInteractor loginInteractor;
+    private WeatherInteractor weatherInteractor;
 
-    WeatherPresenter(WeatherView weatherView, WeatherInteractor loginInteractor) {
+    WeatherPresenter(WeatherView weatherView, WeatherInteractor weatherInteractor) {
         this.weatherView = weatherView;
-        this.loginInteractor = loginInteractor;
+        this.weatherInteractor = weatherInteractor;
     }
 
-    public void validateCredentials(String city, int days,int previousIndex) {
+    public void fetchWeatherData(String city, int days, int previousIndex) {
         if (weatherView != null) {
             weatherView.showProgress();
         }
 
-        loginInteractor.fecthData(city, days,previousIndex, this);
+        weatherInteractor.fecthData(city, days, previousIndex, this);
     }
 
     public void onDestroy() {

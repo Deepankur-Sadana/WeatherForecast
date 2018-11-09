@@ -35,7 +35,13 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchWeatherData();
+    }
+
     private void fetchWeatherData() {
-        weatherPresenter.validateCredentials("Delhi", 6, 12323);
+        weatherPresenter.fetchWeatherData("Delhi", 6, 12323);
     }
 }
