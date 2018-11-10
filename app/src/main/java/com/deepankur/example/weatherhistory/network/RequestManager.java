@@ -3,6 +3,8 @@ package com.deepankur.example.weatherhistory.network;
 import android.util.Log;
 import android.util.Pair;
 
+import com.deepankur.example.weatherhistory.data.WeatherData;
+import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
@@ -72,8 +74,13 @@ public class RequestManager {
                 String mMessage = response.body().string();
                 if (response.isSuccessful()) {
                     try {
-                        JSONObject json = new JSONObject(mMessage);
-                        final String serverResponse = json.getString("Your Index");
+                        JSONObject serverResponse = new JSONObject(mMessage);
+//                        WeatherData data = new Gson.toJson (serverResponse);
+
+                        Gson gson = new Gson();
+                        String jsonInString = String.valueOf(serverResponse);
+                        WeatherData user = gson.fromJson(jsonInString, WeatherData.class);
+                        Log.d("", "onResponse: "+user);
 
                     } catch (Exception e) {
                         e.printStackTrace();
