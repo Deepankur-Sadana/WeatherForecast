@@ -1,5 +1,6 @@
 package com.deepankur.example.weatherhistory.network;
 
+import android.util.Log;
 import android.util.Pair;
 
 import com.squareup.okhttp.Call;
@@ -8,6 +9,8 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -21,21 +24,17 @@ public class RequestManager {
     // avoid creating several instances, should be singleon
     private OkHttpClient client;
 
-//    Request request = new Request.Builder()
-//            .url("http://www.vogella.com/index.html")
-//            .build();
 
-    Request builWeatherRequest() {
+    private Request builWeatherRequest() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(ApiConstants.BASE_URL).newBuilder();
         urlBuilder.addQueryParameter("key", "63bf5624a4654f61bc5205856180811");
         urlBuilder.addQueryParameter("q", "delhi");
         urlBuilder.addQueryParameter("days", "3");
         String url = urlBuilder.build().toString();
 
-        Request request = new Request.Builder()
-                .url(url)
+        return new Request.Builder()
+                .url(url).get()
                 .build();
-        return request;
     }
 
     private static RequestManager sRequestManager;
@@ -55,9 +54,10 @@ public class RequestManager {
     }
 
 
-    public void fetchWeatherData() throws IOException {
+    public void fetchWeatherData(Callback callback) throws IOException {
+
         Request request = builWeatherRequest();
-        Response response = client.newCall(request).execute();
+//        Response response = client.newCall(request).execute();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -67,10 +67,20 @@ public class RequestManager {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
+
+
+                String mMessage = response.body().string();
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject json = new JSONObject(mMessage);
+                        final String serverResponse = json.getString("Your Index");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
-                    // do something wih the result
+                    throw new IOException("Unexpected code " + response);
                 }
             }
 
