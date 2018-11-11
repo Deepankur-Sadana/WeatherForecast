@@ -23,22 +23,28 @@ public class RequestManager {
 
     private RequestManager() {
         client = new OkHttpClient();
+        mainHandler = new Handler();
     }
 
     // avoid creating several instances, should be singleon
     private OkHttpClient client;
 
 
-    private Request builWeatherRequest() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(ApiConstants.BASE_URL).newBuilder();
-        urlBuilder.addQueryParameter("key", "63bf5624a4654f61bc5205856180811");
-        urlBuilder.addQueryParameter("q", "Bangalore");
-        urlBuilder.addQueryParameter("days", "4");
-        String url = urlBuilder.build().toString();
-
+    private static Request builWeatherRequest() {
+        String url = builWeatherRequest("Bangalore", 4).build().toString();
         return new Request.Builder()
                 .url(url).get()
                 .build();
+    }
+
+    public static HttpUrl.Builder builWeatherRequest(String region, int days) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(ApiConstants.BASE_URL).newBuilder();
+        urlBuilder.addQueryParameter("key", ApiConstants.APIKEY);
+        urlBuilder.addQueryParameter("q", region);
+        urlBuilder.addQueryParameter("days", String.valueOf(days));
+
+        return urlBuilder;
+
     }
 
     private static RequestManager sRequestManager;
@@ -58,7 +64,7 @@ public class RequestManager {
     }
 
 
-    final String TAG = RequestManager.class.getSimpleName();
+    private final String TAG = RequestManager.class.getSimpleName();
 
     void fetchWeatherData(final WeatherInteractor.OnWeatherApiCallFinishedListener callback) throws IOException {
         Request request = builWeatherRequest();
@@ -84,7 +90,7 @@ public class RequestManager {
                         Gson gson = new Gson();
                         String jsonInString = String.valueOf(serverResponse);
                         WeatherData weatherData = gson.fromJson(jsonInString, WeatherData.class);
-                        onSuccess(weatherData,callback);
+                        onSuccess(weatherData, callback);
                     } catch (Exception e) {
                         e.printStackTrace();
                         onError(callback);
@@ -107,7 +113,7 @@ public class RequestManager {
         });
     }
 
-    private void onError(final WeatherInteractor.OnWeatherApiCallFinishedListener callFinishedListener){
+    private void onError(final WeatherInteractor.OnWeatherApiCallFinishedListener callFinishedListener) {
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +122,7 @@ public class RequestManager {
         });
     }
 
-    Handler mainHandler = new Handler(Looper.getMainLooper());
+    private Handler mainHandler ;
 
 
 }
