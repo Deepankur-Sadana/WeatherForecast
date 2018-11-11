@@ -1,5 +1,7 @@
 package com.deepankur.example.weatherhistory;
 
+import com.deepankur.example.weatherhistory.data.WeatherData;
+
 public class WeatherPresenter implements WeatherInteractor.OnWeatherApiCallFinishedListener {
 
     private WeatherView weatherView;
@@ -10,12 +12,11 @@ public class WeatherPresenter implements WeatherInteractor.OnWeatherApiCallFinis
         this.weatherInteractor = weatherInteractor;
     }
 
-    public void fetchWeatherData(String city, int days, int previousIndex) {
+    void fetchWeatherData() {
         if (weatherView != null) {
             weatherView.showProgress();
         }
-
-        weatherInteractor.fecthData(city, days, previousIndex, this);
+        weatherInteractor.fecthData( this);
     }
 
     public void onDestroy() {
@@ -25,13 +26,17 @@ public class WeatherPresenter implements WeatherInteractor.OnWeatherApiCallFinis
 
     @Override
     public void onError() {
-
+        if (weatherView != null) {
+            weatherView.hideProgress();
+            weatherView.onDataError();
+        }
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(WeatherData weatherData) {
         if (weatherView != null) {
-            weatherView.onWeatherDataFetched();
+            weatherView.hideProgress();
+            weatherView.onWeatherDataFetched(weatherData);
         }
     }
 }

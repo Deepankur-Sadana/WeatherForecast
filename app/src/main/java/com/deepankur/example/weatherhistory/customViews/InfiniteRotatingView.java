@@ -38,7 +38,8 @@ public class InfiniteRotatingView extends android.support.v7.widget.AppCompatIma
 
     private void init(Context context) {
         rotation = AnimationUtils.loadAnimation(context, R.anim.rotate);
+        rotation.setInterpolator(null);
         rotation.setFillAfter(true);
-
+        startAnimation(rotation);
     }
 }

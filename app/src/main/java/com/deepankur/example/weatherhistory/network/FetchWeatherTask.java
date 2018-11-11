@@ -1,18 +1,17 @@
 package com.deepankur.example.weatherhistory.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
+import com.deepankur.example.weatherhistory.WeatherInteractor;
 
-import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class FetchWeatherTask extends AsyncTask<Void, Void, JSONObject> {
-    Callback callback;
+public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+    private WeatherInteractor.OnWeatherApiCallFinishedListener callback;
 
-    public FetchWeatherTask(Callback callback) {
+    public FetchWeatherTask(WeatherInteractor.OnWeatherApiCallFinishedListener callback) {
         this.callback = callback;
 
     }
@@ -23,7 +22,7 @@ public class FetchWeatherTask extends AsyncTask<Void, Void, JSONObject> {
     }
 
     @Override
-    protected JSONObject doInBackground(Void... voids) {
+    protected Void doInBackground(Void... voids) {
         RequestManager requestManager = RequestManager.getInstance();
         try {
             requestManager.fetchWeatherData(callback);
@@ -34,7 +33,8 @@ public class FetchWeatherTask extends AsyncTask<Void, Void, JSONObject> {
     }
 
     @Override
-    protected void onPostExecute(JSONObject jsonObject) {
+    protected void onPostExecute(Void jsonObject) {
         super.onPostExecute(jsonObject);
+
     }
 }

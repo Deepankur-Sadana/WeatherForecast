@@ -1,6 +1,8 @@
 
 package com.deepankur.example.weatherhistory;
 
+import com.deepankur.example.weatherhistory.data.WeatherData;
+
 public interface WeatherView {
 
     void showProgress();
@@ -9,5 +11,5 @@ public interface WeatherView {
 
     void onDataError();
 
-    void onWeatherDataFetched();
+    void onWeatherDataFetched(WeatherData weatherData);
 }

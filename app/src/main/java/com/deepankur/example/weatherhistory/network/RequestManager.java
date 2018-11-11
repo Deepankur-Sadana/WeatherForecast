@@ -1,11 +1,13 @@
 package com.deepankur.example.weatherhistory.network;
 
-import android.util.Log;
-import android.util.Pair;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import com.deepankur.example.weatherhistory.WeatherInteractor;
 import com.deepankur.example.weatherhistory.data.WeatherData;
 import com.google.gson.Gson;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
@@ -31,7 +33,7 @@ public class RequestManager {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(ApiConstants.BASE_URL).newBuilder();
         urlBuilder.addQueryParameter("key", "63bf5624a4654f61bc5205856180811");
         urlBuilder.addQueryParameter("q", "delhi");
-        urlBuilder.addQueryParameter("days", "3");
+        urlBuilder.addQueryParameter("days", "4");
         String url = urlBuilder.build().toString();
 
         return new Request.Builder()
@@ -56,42 +58,65 @@ public class RequestManager {
     }
 
 
-    public void fetchWeatherData(Callback callback) throws IOException {
+    final String TAG = RequestManager.class.getSimpleName();
 
+    void fetchWeatherData(final WeatherInteractor.OnWeatherApiCallFinishedListener callback) throws IOException {
         Request request = builWeatherRequest();
-//        Response response = client.newCall(request).execute();
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-
+                callback.onError();
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-
-
-                String mMessage = response.body().string();
+            public void onResponse(Response response) {
+                String mMessage = null;
+                try {
+                    mMessage = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    onError(callback);
+                    return;
+                }
                 if (response.isSuccessful()) {
                     try {
                         JSONObject serverResponse = new JSONObject(mMessage);
-//                        WeatherData data = new Gson.toJson (serverResponse);
-
                         Gson gson = new Gson();
                         String jsonInString = String.valueOf(serverResponse);
-                        WeatherData user = gson.fromJson(jsonInString, WeatherData.class);
-                        Log.d("", "onResponse: "+user);
-
+                        WeatherData weatherData = gson.fromJson(jsonInString, WeatherData.class);
+                        onSuccess(weatherData,callback);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        onError(callback);
                     }
-
                 } else {
-                    throw new IOException("Unexpected code " + response);
+                    onError(callback);
                 }
             }
-
-
         });
     }
+
+
+    private void onSuccess(final WeatherData weatherData, final WeatherInteractor.OnWeatherApiCallFinishedListener callFinishedListener) {
+
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                callFinishedListener.onSuccess(weatherData);
+            }
+        });
+    }
+
+    private void onError(final WeatherInteractor.OnWeatherApiCallFinishedListener callFinishedListener){
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                callFinishedListener.onError();
+            }
+        });
+    }
+
+    Handler mainHandler = new Handler(Looper.getMainLooper());
+
+
 }

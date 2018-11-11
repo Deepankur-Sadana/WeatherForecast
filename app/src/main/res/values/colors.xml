@@ -6,4 +6,5 @@
 
     <color name="retry_bg">#E85959</color>
     <color name="retry_button_bg">#4A4A4A</color>
+    <color name="list_text_color">#2A2A2A</color>
 </resources>

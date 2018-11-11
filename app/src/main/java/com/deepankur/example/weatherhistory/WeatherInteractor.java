@@ -1,52 +1,32 @@
 package com.deepankur.example.weatherhistory;
 
-import android.os.Handler;
 
+import com.deepankur.example.weatherhistory.data.WeatherData;
 import com.deepankur.example.weatherhistory.network.FetchWeatherTask;
-import com.deepankur.example.weatherhistory.network.RequestManager;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-import java.io.IOException;
 
 public class WeatherInteractor {
 
-    interface OnWeatherApiCallFinishedListener {
+    public interface OnWeatherApiCallFinishedListener {
 
         void onError();
 
-        void onSuccess();
+        void onSuccess(WeatherData weatherData);
     }
 
-    public void fecthData(final String location, final int days,final int cursorID, final OnWeatherApiCallFinishedListener listener) {
+    void fecthData(final OnWeatherApiCallFinishedListener listener) {
 
-        FetchWeatherTask weatherTask = new FetchWeatherTask(new Callback() {
+        FetchWeatherTask weatherTask = new FetchWeatherTask(new OnWeatherApiCallFinishedListener() {
             @Override
-            public void onFailure(Request request, IOException e) {
-
+            public void onError() {
+                listener.onError();
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-
+            public void onSuccess(WeatherData weatherData) {
+                listener.onSuccess(weatherData);
             }
         });
         weatherTask.execute();
-
-
-
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                //noinspection ConstantConditions
-//                if (data.equals("mockin .. ")) {
-//                    listener.onError();
-//                    return;
-//                }
-//                listener.onSuccess();
-//            }
-//        }, 400);
     }
 }
