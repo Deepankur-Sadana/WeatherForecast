@@ -32,7 +32,7 @@ public class RequestManager {
     private Request builWeatherRequest() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(ApiConstants.BASE_URL).newBuilder();
         urlBuilder.addQueryParameter("key", "63bf5624a4654f61bc5205856180811");
-        urlBuilder.addQueryParameter("q", "delhi");
+        urlBuilder.addQueryParameter("q", "Bangalore");
         urlBuilder.addQueryParameter("days", "4");
         String url = urlBuilder.build().toString();
 

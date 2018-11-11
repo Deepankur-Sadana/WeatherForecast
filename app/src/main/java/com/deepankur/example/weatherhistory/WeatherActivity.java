@@ -15,8 +15,8 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
     WeatherPresenter weatherPresenter;
     RecyclerView recyclerView;
     WeatherListAdapter weatherListAdapter;
-    View loader;
-    View retry;
+    View loader, retry,locatoionTemperatureView;
+    TextView currentTemperatureTV , currentLocationTV ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,9 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
         weatherPresenter = new WeatherPresenter(this, new WeatherInteractor());
         loader = findViewById(R.id.loading);
         retry = findViewById(R.id.retry);
+        currentTemperatureTV = findViewById(R.id.currentTemperatureTV);
+        currentLocationTV = findViewById(R.id.currentLocation);
+        locatoionTemperatureView = findViewById(R.id.locatoionTemperatureView);
         findViewById(R.id.retryTV).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,10 +78,14 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
 
     final String TAG = WeatherActivity.class.getCanonicalName();
 
+
     @SuppressLint("SetTextI18n")
     void refreshViews(WeatherData weatherData) {
         Log.d(TAG, "refreshViews: " + weatherData);
-        ((TextView) findViewById(R.id.currentTemperatureTV)).setText(weatherData.getCurrent().getFeelslike_c() + (char) 0x00B0);
+        currentTemperatureTV.setText(weatherData.getCurrent().getFeelslike_c() + (char) 0x00B0);
+        currentLocationTV.setText(weatherData.getLocation().getName());
+        recyclerView.setTranslationY(locatoionTemperatureView.getMeasuredHeight()*2f);
+        recyclerView.animate().translationY(0).setDuration(800).start();
         retry.setVisibility(View.GONE);
         if (weatherListAdapter == null) {
             weatherListAdapter = new WeatherListAdapter(weatherData.getForecast().getForecastday());
@@ -87,6 +94,5 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
             weatherListAdapter.setList(weatherData.getForecast().getForecastday());
         }
     }
-
 
 }

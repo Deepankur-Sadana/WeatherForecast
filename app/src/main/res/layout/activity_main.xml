@@ -7,6 +7,7 @@
     tools:context=".WeatherActivity">
 
     <LinearLayout
+        android:id="@+id/locatoionTemperatureView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
@@ -18,17 +19,23 @@
         <TextView
             android:id="@+id/currentTemperatureTV"
             android:layout_width="wrap_content"
+            android:text="Delhi"
+            android:textColor="@color/list_text_color"
             android:layout_height="wrap_content"
             android:textSize="96sp" />
 
         <TextView
+            android:id="@+id/currentLocation"
             android:layout_width="wrap_content"
             android:text="Delhi"
+            android:textColor="@color/list_text_color_light"
+            android:textSize="36sp"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
 
     <android.support.v7.widget.RecyclerView
+        android:paddingTop="16dp"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="356dp"
