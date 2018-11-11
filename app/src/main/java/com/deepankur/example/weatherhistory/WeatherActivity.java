@@ -15,12 +15,13 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
     WeatherPresenter weatherPresenter;
     RecyclerView recyclerView;
     WeatherListAdapter weatherListAdapter;
-    View loader, retry,locatoionTemperatureView;
-    TextView currentTemperatureTV , currentLocationTV ;
+    View loader, retry, locatoionTemperatureView;
+    TextView currentTemperatureTV, currentLocationTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FontPicker.init(this);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recyclerView);
         weatherPresenter = new WeatherPresenter(this, new WeatherInteractor());
@@ -28,6 +29,12 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
         retry = findViewById(R.id.retry);
         currentTemperatureTV = findViewById(R.id.currentTemperatureTV);
         currentLocationTV = findViewById(R.id.currentLocation);
+
+        currentLocationTV.setTypeface(FontPicker.getRobotoThin());
+        currentTemperatureTV.setTypeface(FontPicker.getRobotoBlack());
+
+        ((TextView) findViewById(R.id.went_wrong)).setTypeface(FontPicker.getRobotoThin());
+
         locatoionTemperatureView = findViewById(R.id.locatoionTemperatureView);
         findViewById(R.id.retryTV).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +91,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView {
         Log.d(TAG, "refreshViews: " + weatherData);
         currentTemperatureTV.setText(weatherData.getCurrent().getFeelslike_c() + (char) 0x00B0);
         currentLocationTV.setText(weatherData.getLocation().getName());
-        recyclerView.setTranslationY(locatoionTemperatureView.getMeasuredHeight()*2f);
+        recyclerView.setTranslationY(locatoionTemperatureView.getMeasuredHeight() * 2f);
         recyclerView.animate().translationY(0).setDuration(800).start();
         retry.setVisibility(View.GONE);
         if (weatherListAdapter == null) {

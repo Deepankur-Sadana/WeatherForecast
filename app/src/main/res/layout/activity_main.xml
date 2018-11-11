@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F5F6F7"
     tools:context=".WeatherActivity">
 
     <LinearLayout
@@ -38,6 +39,7 @@
         android:paddingTop="16dp"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
+        android:background="@android:color/white"
         android:layout_height="356dp"
         android:layout_alignParentBottom="true"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager" />

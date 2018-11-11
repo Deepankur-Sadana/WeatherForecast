@@ -65,6 +65,8 @@ public class WeatherListAdapter extends RecyclerView.Adapter<WeatherListAdapter.
             this.root = view;
             day = root.findViewById(R.id.day);
             temp = root.findViewById(R.id.temp);
+            day.setTypeface(FontPicker.getRobotoRegular());
+            temp.setTypeface(FontPicker.getRobotoRegular());
         }
     }
 }
