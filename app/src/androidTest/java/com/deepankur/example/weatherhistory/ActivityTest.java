@@ -44,6 +44,16 @@ public class ActivityTest {
         onView(withId(R.id.loading)).check(matches(not(isDisplayed())));
     }
 
+    /**
+     * We'll generate tomorrows day ie . monday/tuesday by shifting time to 24 hrs later
+     * and assert whether this is actually the second item in recycler view
+     */
+    @Test
+    public void aatestCorrectDay(){
+        onView(TestUtils.withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(1, R.id.day))
+                .check(matches(withText(TestUtils.getommorow(System.currentTimeMillis()))));
+    }
     @After
     public void tearDown() throws Exception {
         //After Test case Execution

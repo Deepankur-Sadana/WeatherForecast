@@ -7,13 +7,20 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class TestUtils {
+
+    private static String TAG = TestUtils.class.getSimpleName();
 
     public static <VH extends RecyclerView.ViewHolder> ViewAction actionOnItemViewAtPosition(int position,
                                                                                              @IdRes
@@ -40,7 +47,7 @@ public class TestUtils {
         }
 
         public Matcher<View> getConstraints() {
-            return Matchers.allOf(new Matcher[] {
+            return Matchers.allOf(new Matcher[]{
                     ViewMatchers.isAssignableFrom(RecyclerView.class), ViewMatchers.isDisplayed()
             });
         }
@@ -84,7 +91,7 @@ public class TestUtils {
         }
 
         public Matcher<View> getConstraints() {
-            return Matchers.allOf(new Matcher[] {
+            return Matchers.allOf(new Matcher[]{
                     ViewMatchers.isAssignableFrom(RecyclerView.class), ViewMatchers.isDisplayed()
             });
         }
@@ -106,6 +113,25 @@ public class TestUtils {
     }
 
 
+    static String shiftEpochTo24HoursLater(long currentEpoch) {
+        long tommorowEpoch = currentEpoch * 1000 + (24 * 60 * 60);
+        return formatDateToDay(tommorowEpoch);
+    }
 
+
+    private static String formatDateToDay(long date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+        Date dateFormat = new java.util.Date(date);
+        Log.d(TAG, sdf.format(dateFormat));
+        return sdf.format(dateFormat);
+    }
+
+    public static String getommorow(long l) {
+        Date now = new Date(System.currentTimeMillis() + ((24 * 60 * 60) * 1000));
+        SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE"); // the day of the week abbreviated
+        return (simpleDateformat.format(now));
+
+
+    }
 
 }
