@@ -42,4 +42,15 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.15.0'
 
 
+    // Espresso support
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+
+    // add this for intent mocking support
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
+
+
+
 }

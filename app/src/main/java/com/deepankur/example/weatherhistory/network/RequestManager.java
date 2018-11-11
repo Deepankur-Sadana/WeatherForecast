@@ -22,8 +22,9 @@ public class RequestManager {
 
 
     private RequestManager() {
+        Log.d(TAG, "RequestManager: ................iiiiiii...");
         client = new OkHttpClient();
-        mainHandler = new Handler();
+        mainHandler = new Handler(Looper.getMainLooper());
     }
 
     // avoid creating several instances, should be singleon
